@@ -2,36 +2,302 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PrinterHub - Trading Interface</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PrinterHub Premium Trading Ecosystem</title>
     <style>
+        :root {
+            --bg-deep: #0a111c;
+            --bg-card: #151f2e;
+            --text-main: #ffffff;
+            --text-muted: #9aa8ba;
+            --primary-accent: #2e62f6;
+            --green: #00c853;
+            --red: #ff1744;
+            --tab-active-bg: #dbe4ff;
+            --tab-active-text: #0d1b3e;
+        }
+
         body {
-            background-color: #121212;
-            color: #ffffff;
-            font-family: sans-serif;
-            padding: 20px;
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             margin: 0;
+            padding: 0;
+            user-select: none;
         }
-        .container {
-            max-width: 500px;
-            margin: 0 auto;
+
+        /* HIGHTECH Header Theme */
+        .brand-header {
+            background-color: #0d1622;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid #1e2d42;
+        }
+
+        .brand-logo {
+            font-weight: 900;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+        }
+        .brand-logo span { color: #f44336; }
+
+        .balance-badge {
+            background: #1a2638;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            border: 1px solid #2a3b54;
+        }
+
+        /* Main Top Nav Bar Setup */
+        .top-navbar {
+            display: flex;
+            background-color: #101926;
+            border-bottom: 1px solid #1e2d42;
+        }
+
+        .nav-tab {
+            flex: 1;
             text-align: center;
+            padding: 12px 0;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s ease;
         }
-        .tick-display {
-            font-size: 2rem;
-            margin: 20px 0;
-            color: #00ffcc;
+
+        .nav-tab.active {
+            background-color: var(--tab-active-bg);
+            color: var(--tab-active-text);
+        }
+
+        /* Content Container Sections */
+        .view-panel {
+            display: none;
+            padding: 12px;
+        }
+
+        .view-panel.active {
+            display: block;
+        }
+
+        /* Custom Digit Panel Styling */
+        .market-dropdown {
+            width: 100%;
+            background: var(--bg-card);
+            color: white;
+            border: 1px solid #2a3b54;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        .stats-circle-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .stat-ring {
+            background: var(--bg-card);
+            border: 3px solid #223147;
+            border-radius: 50%;
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .stat-ring.highest-hit { border-color: var(--green) !important; }
+        .stat-ring.lowest-hit { border-color: var(--red) !important; }
+
+        .ring-digit { font-size: 1rem; font-weight: bold; }
+        .ring-pct { font-size: 0.7rem; color: var(--text-muted); margin-top: 2px; }
+
+        /* Strategy Widget Rows */
+        .strategy-matrix {
+            background: var(--bg-card);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #1e2d42;
+        }
+
+        .matrix-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+        }
+
+        .matrix-row {
+            display: flex;
+            justify-content: space-between;
+            background: #0d1622;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        /* Order Entry Configurations Form */
+        .order-form-box {
+            background: var(--bg-card);
+            border-radius: 8px;
+            padding: 14px;
+            border: 1px solid #1e2d42;
+        }
+
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .form-field { width: 48%; }
+        .form-field.full { width: 100%; }
+
+        .form-field label {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+        }
+
+        .form-field input, .form-field select {
+            width: 100%;
+            background: #0d1622;
+            border: 1px solid #2a3b54;
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 0.95rem;
+        }
+
+        .action-triggers {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+
+        .btn-action {
+            width: 48%;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: white;
+        }
+        .btn-action.match { background-color: var(--green); }
+        .btn-action.differ { background-color: var(--red); }
+
+        /* Fallback Bot Framework Iframe Block */
+        .iframe-container {
+            width: 100%;
+            height: 75vh;
+            border: none;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>PrinterHub Hub</h2>
-        <p>Real-time Market Data</p>
-        <div class="tick-display" id="tick-stream">Connecting to Deriv...</div>
+
+    <div class="brand-header">
+        <div class="brand-logo">⚡ HIGH<span>TECH</span></div>
+        <div class="balance-badge">REAL: $94.00 USD</div>
     </div>
 
-    <!-- Link your custom JavaScript file -->
+    <div class="top-navbar">
+        <div class="nav-tab" onclick="switchView('bot-view', this)">🤖 Free Bots</div>
+        <div class="nav-tab active" onclick="switchView('dtrader-view', this)">📈 D Trader</div>
+        <div class="nav-tab" onclick="switchView('botbuilder-view', this)">🧱 Bot Builder</div>
+    </div>
+
+    <div id="dtrader-view" class="view-panel active">
+        <select class="market-dropdown" id="market-id">
+            <option value="1HZ50V">Volatility 50 Index</option>
+            <option value="1HZ10V">Volatility 10 Index</option>
+            <option value="1HZ100V">Volatility 100 Index</option>
+        </select>
+
+        <div class="stats-circle-container">
+            <div class="stat-ring" id="ring-0"><span class="ring-digit">0</span><span class="ring-pct" id="p-0">0%</span></div>
+            <div class="stat-ring" id="ring-1"><span class="ring-digit">1</span><span class="ring-pct" id="p-1">0%</span></div>
+            <div class="stat-ring" id="ring-2"><span class="ring-digit">2</span><span class="ring-pct" id="p-2">0%</span></div>
+            <div class="stat-ring" id="ring-3"><span class="ring-digit">3</span><span class="ring-pct" id="p-3">0%</span></div>
+            <div class="stat-ring" id="ring-4"><span class="ring-digit">4</span><span class="ring-pct" id="p-4">0%</span></div>
+            <div class="stat-ring" id="ring-5"><span class="ring-digit">5</span><span class="ring-pct" id="p-5">0%</span></div>
+            <div class="stat-ring" id="ring-6"><span class="ring-digit">6</span><span class="ring-pct" id="p-6">0%</span></div>
+            <div class="stat-ring" id="ring-7"><span class="ring-digit">7</span><span class="ring-pct" id="p-7">0%</span></div>
+            <div class="stat-ring" id="ring-8"><span class="ring-digit">8</span><span class="ring-pct" id="p-8">0%</span></div>
+            <div class="stat-ring" id="ring-9"><span class="ring-digit">9</span><span class="ring-pct" id="p-9">0%</span></div>
+        </div>
+
+        <div class="strategy-matrix">
+            <div class="matrix-title">Strategy Analytics Indicators</div>
+            <div class="matrix-row">
+                <span>Over / Under Trend:</span>
+                <span id="ou-analytics" style="color: var(--primary-accent); font-weight:bold;">Analyzing...</span>
+            </div>
+            <div class="matrix-row">
+                <span>Even / Odd Ratio:</span>
+                <span id="eo-analytics" style="color: var(--primary-accent); font-weight:bold;">Analyzing...</span>
+            </div>
+        </div>
+
+        <div class="order-form-box">
+            <div class="form-row">
+                <div class="form-field full">
+                    <label>Trade Type Options</label>
+                    <select id="trade-type">
+                        <option value="matches_differs">Matches / Differs</option>
+                        <option value="over_under">Over / Under</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-field">
+                    <label>Last Digit Prediction</label>
+                    <input type="number" id="pred-num" value="6" min="0" max="9">
+                </div>
+                <div class="form-field">
+                    <label>Duration (Ticks)</label>
+                    <input type="number" id="tick-count" value="2">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-field full">
+                    <label>Stake Amount (USD)</label>
+                    <input type="number" id="stake-amount" value="53">
+                </div>
+            </div>
+
+            <div class="action-triggers">
+                <button class="btn-action match">Matches</button>
+                <button class="btn-action differ">Differs</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="botbuilder-view" class="view-panel">
+        <iframe class="iframe-container" src="https://bot.deriv.com" id="builder-frame"></iframe>
+    </div>
+
+    <div id="bot-view" class="view-panel">
+        <p style="text-align: center; color: var(--text-muted); margin-top:40px;">No automated strategies loaded inside the current phone cache profile.</p>
+    </div>
+
     <script src="app.js"></script>
 </body>
 </html>
